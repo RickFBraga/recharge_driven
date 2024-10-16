@@ -1,0 +1,23 @@
+CREATE TABLE clients (
+    id SERIAL PRIMARY KEY,
+    cpf VARCHAR(11) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE phones (
+  id SERIAL PRIMARY KEY,
+  number VARCHAR(15) NOT NULL UNIQUE,
+  operator INT NOT NULL,
+  client_cpf VARCHAR(14) NOT NULL,
+  FOREIGN KEY (operator) REFERENCES carriers(id),
+  FOREIGN KEY (client_cpf) REFERENCES clients(cpf)
+);
+
+CREATE TABLE recharges (
+    id SERIAL PRIMARY KEY,
+    phone_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL CHECK (amount BETWEEN 10 AND 1000),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (phone_id) REFERENCES phones(id)
+);
