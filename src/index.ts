@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(router)
 
 app.get('/health', (req, res) => {
-    res.sendStatus(200);
+    res.sendStatus(200).send('Health endpoint is working!');
 });
 
 app.use((err, res,) => {
