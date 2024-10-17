@@ -22,7 +22,7 @@ export const validateRecharge = (req: Request, res: Response, next: NextFunction
 export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction): void => {
   console.error(err);
   const status = err.status || 500;
-  
+
   res.status(status).json({
     status,
     message: err.message || 'Internal Server Error',

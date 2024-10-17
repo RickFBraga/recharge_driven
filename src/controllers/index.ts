@@ -35,7 +35,6 @@ export const listPhones = async (req: Request<ParamsWithDocument>, res: Response
       [document]
     );
 
-    console.log(`CPF: ${document} | Telefones encontrados: ${result.rowCount}`);
     if (result.rowCount === 0) {
     res.status(200).json([]);
 }
@@ -128,7 +127,7 @@ export const getSummary = async (req: Request<ParamsWithDocument>, res: Response
       if (row.id) {
         phonesMap[row.id].recharges.push({
           id: row.id,
-          value: Number(row.value), // Converter para número, se necessário
+          value: Number(row.value),
           recharge_date: new Date(row.recharge_date),
         });
       }

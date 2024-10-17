@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import router from './routes';
 import { errorHandler } from './middleware/validations';
@@ -10,13 +10,8 @@ app.use(express.json());
 
 app.use(router)
 
-app.get('/health', (req, res) => {
+app.get('/health', (req: Request, res: Response) => {
     res.sendStatus(200).send('Health endpoint is working!');
-});
-
-app.use((err, res,) => {
-    console.error(err);
-    res.status(500).send('Algo deu errado!');
 });
 
 app.use(errorHandler);
