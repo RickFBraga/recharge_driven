@@ -1,10 +1,8 @@
 import express from 'express';
-import { addCustomer, addPhone, addRecharge, getSummary, listPhones, listRecharges } from '../controllers';
+import { addPhone, addRecharge, getSummary, listPhones, listRecharges } from '../controllers';
 import { validatePhone, validateRecharge } from '../middleware/validations';
 
 export const router = express.Router();
-
-router.post('/customers', addCustomer);
 
 router.post('/phones', validatePhone, addPhone);
 

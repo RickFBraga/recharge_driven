@@ -1,11 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import Joi from 'joi';
-
-const phoneSchema = Joi.object({
-  number: Joi.string().pattern(/^\d+$/).required(),
-  carrier_id: Joi.number().required(),
-  customer_id: Joi.number().required(),
-});
+import { phoneSchema, rechargeSchema } from '../schemas';
 
 export const validatePhone = (req: Request, res: Response, next: NextFunction): void => {
   const { error } = phoneSchema.validate(req.body);
@@ -16,11 +10,6 @@ export const validatePhone = (req: Request, res: Response, next: NextFunction): 
   }
 }
 
-const rechargeSchema = Joi.object({
-  phone_id: Joi.number().required(),
-  value: Joi.number().min(10).max(1000).required(),
-});
-
 export const validateRecharge = (req: Request, res: Response, next: NextFunction): void => {
   const { error } = rechargeSchema.validate(req.body);
   if (error) {
@@ -29,3 +18,14 @@ export const validateRecharge = (req: Request, res: Response, next: NextFunction
     next();
   }
 };
+
+export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction): void => {
+  console.error(err);
+  const status = err.status || 500;
+  
+  res.status(status).json({
+    status,
+    message: err.message || 'Internal Server Error',
+  });
+};
+

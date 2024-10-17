@@ -1,16 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
+import { Phone, Recharge } from '../protocols';
 
-const phoneSchema = Joi.object({
-  phoneNumber: Joi.string().required(),
-  operator: Joi.string().required(),
-  cpf: Joi.string().required(),
+export const phoneSchema = Joi.object<Phone>({
+  number: Joi.string().length(11).required(),  
+  carrier_id: Joi.number().required(),
+  cpf: Joi.string().length(11).required(),
+  description: Joi.string().required(),
 });
 
-export const validatePhone = (req: Request, res: Response, next: NextFunction): Response | void => {
-  const { error } = phoneSchema.validate(req.body);
-  if (error) {
-    return res.status(422).json({ error: error.details.map((detail) => detail.message) });
-  }
-  next();
-};
+export const rechargeSchema = Joi.object<Recharge>({
+  phone_id: Joi.number().required(),
+  value: Joi.number().min(10).max(1000).required(),
+});
