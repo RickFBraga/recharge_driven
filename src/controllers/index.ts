@@ -6,21 +6,33 @@ export const addPhone = async (req: Request, res: Response): Promise<void> => {
   const { number, carrier_id, description, cpf }: Phone = req.body;
 
   try {
-    const result = await db.query('SELECT * FROM phones WHERE number = $1', [number]);
+
+    const cpfPhonesCount = await db.query<{ count: number }>(
+      'SELECT COUNT(*) AS count FROM phones WHERE cpf = $1',
+      [cpf]
+    );
+
+    if (cpfPhonesCount.rows[0].count >= 3) {
+      res.status(409).json({ error: 'This CPF has already reached the limit of 3 phone numbers' });
+      return;
+    }
+
+    const result = await db.query<Phone>('SELECT * FROM phones WHERE number = $1', [number]);
 
     if (result && typeof result.rowCount === 'number' && result.rowCount > 0) {
       res.status(409).json({ error: 'Phone number already exists' });
+      return
     }
 
-    const insertResult = await db.query(
+    const insertResult = await db.query<Phone>(
       'INSERT INTO phones (number, carrier_id, description, cpf) VALUES ($1, $2, $3, $4) RETURNING *',
       [number, carrier_id, description, cpf]
     );
 
     res.status(201).json(insertResult.rows[0]);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error inserting phone' });
+    console.log(error)
+    res.status(500).send({ error: 'Error inserting phone' });
   }
 };
 export const listPhones = async (req: Request<ParamsWithDocument>, res: Response): Promise<void> => {
