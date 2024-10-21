@@ -13,11 +13,7 @@ db.connect()
         console.log('Conectado ao banco de dados com sucesso!');
     })
     .catch((err: unknown) => {
-    if (err instanceof Error) {
-        console.error('Erro ao conectar ao banco de dados:', err.message);
-    } else {
         console.error('Erro ao conectar ao banco de dados:', err);
-    }
-});
+    });
 
 export default db;
