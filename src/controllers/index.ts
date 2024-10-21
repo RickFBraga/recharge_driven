@@ -49,6 +49,7 @@ export const listPhones = async (req: Request<ParamsWithDocument>, res: Response
 
     if (result.rowCount === 0) {
     res.status(200).json([]);
+    return
 }
 
 
@@ -67,6 +68,7 @@ export const addRecharge = async (req: Request, res: Response): Promise<void> =>
 
     if (result.rowCount === 0) {
       res.status(404).json({ error: 'Phone not found' });
+      return
     }
 
     const insertResult = await db.query<Recharge>(
