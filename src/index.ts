@@ -14,7 +14,8 @@ app.use(cors());
 app.use(router)
 
 app.get('/health', (req: Request, res: Response) => {
-    res.sendStatus(200).send('Health endpoint is working!');
+    res.status(200).send('Health endpoint is working!');
+    return
 });
 
 app.use(errorHandler);

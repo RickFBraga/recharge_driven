@@ -13,26 +13,24 @@ export const addPhone = async (req: Request, res: Response): Promise<void> => {
 
     if (cpfPhonesCount.rows[0].count >= 3) {
       res.status(409).send({ error: 'This CPF has already reached the limit of 3 phone numbers' });
-      return; // Pare a execução após a resposta
+      return;
     }
-
     const result = await db.query<Phone>('SELECT * FROM phones WHERE number = $1', [number]);
 
     if (result && typeof result.rowCount === 'number' && result.rowCount > 0) {
       res.status(409).send({ error: 'Phone number already exists' });
-      return; // Pare a execução após a resposta
+      return;
     }
-
     const insertResult = await db.query<Phone>(
       'INSERT INTO phones (number, carrier_id, description, cpf) VALUES ($1, $2, $3, $4) RETURNING *',
       [number, carrier_id, description, cpf]
     );
 
     res.status(201).send(insertResult.rows[0]);
-    return; // Pare a execução após a resposta de sucesso
+    return;
   } catch (error) {
     console.log(error);
-    if (!res.headersSent) { // Verifique se a resposta já foi enviada
+    if (!res.headersSent) {
       res.status(500).send({ error: 'Error inserting phone' });
     }
   }
